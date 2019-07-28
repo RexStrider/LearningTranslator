@@ -4,7 +4,11 @@
   "description": "a language translation service",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "server": "nodemon index.js",
+    "client": "npm run start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",
@@ -15,5 +19,11 @@
   "bugs": {
     "url": "https://github.com/RexStrider/LearningTranslator/issues"
   },
-  "homepage": "https://github.com/RexStrider/LearningTranslator#readme"
+  "homepage": "https://github.com/RexStrider/LearningTranslator#readme",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "concurrently": "^4.1.1",
+    "express": "^4.17.1",
+    "request": "^2.88.0"
+  }
 }
