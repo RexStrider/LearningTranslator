@@ -18,37 +18,62 @@ module.exports = app => {
     app.get('/api/yuuvis/search', async (req, res) => {
         console.log("api yuuvis search route has been hit!");
 
-        const url = 'https://api.yuuvis.io/dms/objects/search';
+        try {
 
-        const result = await axios({
-            url,
-            method: 'POST', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors', // no-cors, cors, *same-origin
-            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: 'same-origin', // include, *same-origin, omit            
-            headers: {
-                'Content-Type': 'application/json',
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-                "Ocp-Apim-Subscription-Key": "eddb881a638b4b788982b3425ddd92ec"
-            },
-            redirect: 'follow', // manual, *follow, error
-            referrer: 'no-referrer', // no-referrer, *client
-            data: {
-                "query": {
-                    "statement": "SELECT * FROM enaio:object",
-                    "skipCount": 0,
-                    "maxItems": 50
-                }
-            } // body data type must match "Content-Type" header
-        });
+            // const url = 'https://api.yuuvis.io/dms/objects/search'
+            const config = {
+                url: 'https://api.yuuvis.io/dms/objects/search',
+                method: 'POST',
+                data: {
+                    "query": {
+                        "statement": "SELECT * FROM enaio:object",
+                        "skipCount": 0,
+                        "maxItems": 50
+                    }
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                    "Ocp-Apim-Subscription-Key": "eddb881a638b4b788982b3425ddd92ec"
+                },
+                json: true
+            };
 
-        console.log(result);
+            const result = await axios(config);
+        // await axios({
+        //     url,
+        //     method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        //     mode: 'cors', // no-cors, cors, *same-origin
+        //     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        //     credentials: 'same-origin', // include, *same-origin, omit            
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         // 'Content-Type': 'application/x-www-form-urlencoded',
+        //         "Ocp-Apim-Subscription-Key": "eddb881a638b4b788982b3425ddd92ec"
+        //     },
+        //     redirect: 'follow', // manual, *follow, error
+        //     referrer: 'no-referrer', // no-referrer, *client
+        //     data: {
+        //         "query": {
+        //             "statement": "SELECT * FROM enaio:object",
+        //             "skipCount": 0,
+        //             "maxItems": 50
+        //         }
+        //     } // body data type must match "Content-Type" header
+        // });
 
-        const data = await result.json();
+            console.log({ data: result.data.objects });
 
-        console.log(data);
+            // const data = await result.json();
 
-        res.send(data);
+            // console.log(data);
+
+            res.json({ data: result.data.objects });
+        }
+        catch(error) {
+            console.log(error);
+            res.send({ error });
+        }
     });
     //update
     //delete

@@ -3,27 +3,28 @@ import React, { Component } from 'react';
 class testYuuvis extends Component {
     state = {  }
 
-    // async searchDocuments() {
-    //     // console.log("clicked the button");
-    //     const data = await fetch('/api/yuuvis/search');
-    //     console.log(JSON.stringify(data));
-    //     console.log(data);
-    // }
+    async searchDocuments() {
+        // console.log("clicked the button");
+        const result = await fetch('/api/yuuvis/search');
+        // console.log(JSON.stringify(data));
+        const data = await result.json();
+        console.log(data);
+    }
 
     render() { 
         return (
             <div>
-                {/* <button
+                <button
                 onClick={this.searchDocuments}
                 >
                     Submit
-                </button> */}
+                </button>
 
-                <label>Metadata: </label>
+                {/* <label>Metadata: </label>
                 <input type="file" value="metadata" /><br />
                 <label>Content: </label>
                 <input type="file" value="contentdata" /><br />
-                <input type="button" onclick="upload" value="Test" />
+                <input type="button" onclick="upload" value="Test" /> */}
             </div>
         );
     }
