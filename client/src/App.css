@@ -31,3 +31,41 @@
     transform: rotate(360deg);
   }
 }
+
+.Menu-Item {
+  font-size: large;
+  font-weight: bolder;
+  text-decoration: none;
+  border: 1px solid black;
+  background-color: lightgrey;
+}
+
+.Menu-Item:hover {
+  font-size: large;
+  font-weight: bolder;
+  text-decoration: underline;
+  border: 5px solid black;
+}
+
+.Background-image {
+  /* The image used
+  background-image: url(./images/LearningTranslatorLogo.png);
+  z-index: -1;
+  position:absolute; */
+
+  /* Full height*/
+  height: 250px;
+
+  /* Center and scale the image nicely */
+  margin-top: -2%;
+  margin-left: -2%;
+  margin-right: 15%;
+  margin-bottom: -2%;
+  /* background-position: center;
+  background-repeat: no-repeat;
+ /* background-size: cover;*/
+}
+
+.TextBox {
+  background: rgba(0, 0, 0, 0);
+}

@@ -89,7 +89,7 @@ export default props => {
       .catch(console.error);
   }
   return (
-    <section style={{ padding: 10 }}>
+    <section style={{ padding: 10 }} >
       <h1>
         Title:
         <input
@@ -111,6 +111,7 @@ export default props => {
         >
           <h3>Original Text</h3>
           <textarea
+            className="TextBox"
             style={{ width: 300, height: 400 }}
             value={originalText}
             onChange={e => setOriginalText(e.target.value)}
@@ -148,6 +149,7 @@ export default props => {
         >
           <h3>Auto Translated</h3>
           <textarea
+            className="TextBox"
             style={{ width: 300, height: 600 }}
             value={googleText}
             onChange={e => setGoogleText(e.target.value)}
@@ -165,6 +167,7 @@ export default props => {
         >
           <h3>User Translation</h3>
           <textarea
+            className="TextBox"
             style={{ width: 300, height: 600 }}
             value={translatedText}
             onChange={e => setTranslatedText(e.target.value)}
