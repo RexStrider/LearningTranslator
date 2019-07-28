@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import Autosuggest from "./Autosuggest";
-import { uploadFile } from "../Components/yuuvisPost";
-// import { BrowserRouter, Switch, Route, RouteProps } from "react-router-dom";
+import {
+  uploadOriginalFile,
+  updateOriginalFile
+} from "../Components/yuuvisPost";
+
 const TEXT = `The Cardinals used 13 different offensive linemen last season, which is sub-optimal. And if you factor in that center A.Q. Shipley lost the entire 2018 season to a torn ACL, that's 14. No other team has used that many offensive linemen in a season in this millennium. In December, all five of the Cardinals' Week 1 starters were either on the bench or released; the team was using three guys off the practice squad of other teams, or linemen signed off the street. In December alone, Arizona allowed 22 sacks-that's more than the Colts, Saints, and Patriots allowed all season.`;
 export default props => {
+  const [docIds, setDocIds] = useState([null, null, null]);
   const [originalText, setOriginalText] = useState(TEXT);
   const [meta, setMeta] = useState("football, sports, news, article");
   const [lang, setLang] = useState("ko");
@@ -17,10 +21,52 @@ export default props => {
       .then(res => res.text())
       .then(setGoogleText);
   }
-  async function uploadOriginal() {
-    uploadFile(originalText, meta)
+  async function updateOriginal() {
+    updateOriginalFile(docIds[0], originalText, {
+      Name: title,
+      tags: meta.split(","),
+      originalLang: "en",
+      targetLang: lang,
+      autoTranslate: docIds[1],
+      manualTranslate: docIds[2]
+    })
       .then(res => res.json())
       .then(console.log)
+      .catch(console.error);
+  }
+  async function uploadOriginal() {
+    uploadOriginalFile(originalText, {
+      Name: title,
+      tags: meta.split(","),
+      originalLang: "en",
+      targetLang: lang
+    })
+      .then(res => res.json())
+      .then(console.log)
+      .catch(console.error);
+  }
+  async function uploadAuto() {
+    uploadOriginalFile(googleText, {
+      Name: `${title}-auto`,
+      tags: meta.split(","),
+      originalLang: "en",
+      targetLang: lang
+    })
+      .then(res => res.json())
+      .then(console.log)
+      .then(updateOriginal)
+      .catch(console.error);
+  }
+  async function uploadManual() {
+    uploadOriginalFile(translatedText, {
+      Name: `${title}-manual`,
+      tags: meta.split(","),
+      originalLang: "en",
+      targetLang: lang
+    })
+      .then(res => res.json())
+      .then(console.log)
+      .then(updateOriginal)
       .catch(console.error);
   }
   return (
@@ -92,7 +138,9 @@ export default props => {
             value={googleText}
             onChange={e => setGoogleText(e.target.value)}
           />
-          <button style={{ marginTop: 10 }}>save</button>
+          <button style={{ marginTop: 10 }} onClick={uploadAuto}>
+            save
+          </button>
         </div>
         <div
           style={{
@@ -107,7 +155,9 @@ export default props => {
             value={translatedText}
             onChange={e => setTranslatedText(e.target.value)}
           />
-          <button style={{ marginTop: 10 }}>save</button>
+          <button style={{ marginTop: 10 }} onClick={uploadManual}>
+            save
+          </button>
         </div>
       </div>
     </section>

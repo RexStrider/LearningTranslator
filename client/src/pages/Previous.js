@@ -1,79 +1,50 @@
 import React from "react";
-import { useTable } from "react-table";
-
-function MyTable({ columns, data }) {
-  const { getTableProps, headerGroups, rows, prepareRow } = useTable({
-    columns,
-    data
-  });
-
+import { search } from "../Components/yuuvisPost";
+import { Link } from "react-router-dom";
+function MyTable({ data }) {
   return (
-    <table {...getTableProps()}>
+    <table>
+      <colgroup>
+        <col width="20%" />
+        <col width="20%" />
+        <col width="20%" />
+        <col width="20%" />
+        <col width="20%" />
+      </colgroup>
       <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>{column.render("Header")}</th>
-            ))}
-          </tr>
-        ))}
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>CreatedAt</th>
+          <th>Original Lang</th>
+          <th>Target Lang</th>
+        </tr>
       </thead>
       <tbody>
-        {rows.map(
-          (row, i) =>
-            prepareRow(row) || (
-              <tr {...row.getRowProps()}>
-                {row.cells.map(cell => {
-                  return (
-                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                  );
-                })}
-              </tr>
-            )
-        )}
+        {data.map((row, i) => (
+          <tr key={i}>
+            <td>
+              <Link to="/">{row["enaio:objectId"].value}</Link>
+            </td>
+            <td>{row.Name.value}</td>
+            <td>{row["enaio:creationDate"].value}</td>
+            <td>{row["enaio:lastModificationDate"].value}</td>
+            <td>{row.Name.value}</td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );
 }
 
 export default props => {
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: "Name",
-        columns: [
-          {
-            Header: "First Name",
-            accessor: "firstName"
-          },
-          {
-            Header: "Last Name",
-            accessor: "lastName"
-          }
-        ]
-      }
-    ],
-    []
-  );
-
-  const data = [
-    {
-      firstName: "Tanner",
-      lastName: "Linsley"
-    },
-    {
-      firstName: "Shawn",
-      lastName: "Wang"
-    },
-    {
-      firstName: "Kent C.",
-      lastName: "Dodds"
-    },
-    {
-      firstName: "Ryan",
-      lastName: "Florence"
-    }
-  ];
-
-  return <MyTable columns={columns} data={data} />;
+  const [data, setData] = React.useState([]);
+  React.useEffect(() => {
+    search()
+      .then(res => res.json())
+      .then(a => setData(a.objects.map(e => e.properties)))
+      .catch(console.error);
+  }, []);
+  console.log(data);
+  return <MyTable data={data} />;
 };

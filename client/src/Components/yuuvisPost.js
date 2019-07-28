@@ -1,4 +1,9 @@
-export const metadataFileGenerator = hashtags => {
+export const metadataFileGenerator = ({
+  Name,
+  tags,
+  originalLang,
+  targetLang
+}) => {
   const javascript = {
     objects: [
       {
@@ -6,12 +11,10 @@ export const metadataFileGenerator = hashtags => {
           "enaio:objectTypeId": {
             value: "document"
           },
-          Name: {
-            value: "test import"
-          },
-          tags: {
-            value: hashtags
-          }
+          Name: { value: Name },
+          tags: { value: tags },
+          originalLang: { value: originalLang },
+          targetLang: { value: targetLang }
         },
         contentStreams: [
           {
@@ -31,22 +34,47 @@ export const textFileGenerator = text => {
   return file;
 };
 
-export const uploadFile = (text, hashtags) => {
+export const uploadOriginalFile = (text, metadata) => {
   const formData = new FormData();
-  formData.append("data", metadataFileGenerator(hashtags), "metadata");
+  formData.append("data", metadataFileGenerator(metadata), "metadata");
   formData.append("cid_63apple", textFileGenerator(text), "contentdata");
   return fetch("https://api.yuuvis.io/dms/objects", {
-    method: "POST", // *GET, POST, PUT, DELETE, etc.
-    // mode: "no-cors", // no-cors, cors, *same-origin
-    // cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-    // credentials: "same-origin", // include, *same-origin, omit
+    method: "POST",
     headers: {
       "Ocp-Apim-Subscription-Key": "eddb881a638b4b788982b3425ddd92ec"
-      // "Content-Type": "multipart/form-data"
-      // "Content-Type": "application/x-www-form-urlencoded"
     },
-    // redirect: "follow", // manual, *follow, error
-    // referrer: "no-referrer", // no-referrer, *client
     body: formData
   });
+};
+
+export const updateOriginalFile = (docId, text, metadata) => {
+  const formData = new FormData();
+  formData.append("data", metadataFileGenerator(metadata), "metadata");
+  formData.append("cid_63apple", textFileGenerator(text), "contentdata");
+  return fetch("https://api.yuuvis.io/dms/objects", {
+    method: "POST",
+    headers: {
+      "Ocp-Apim-Subscription-Key": "eddb881a638b4b788982b3425ddd92ec"
+    },
+    body: formData
+  });
+};
+
+export const search = () => {
+  return fetch(
+    `https://us-central1-customtranslation.cloudfunctions.net/search`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        query: {
+          statement: "SELECT * FROM enaio:object",
+          skipCount: 0,
+          maxItems: 50
+        }
+      })
+    }
+  );
 };
