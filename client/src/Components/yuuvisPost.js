@@ -1,5 +1,5 @@
 export const metadataFileGenerator = ({
-  Name,
+  name,
   tags,
   originalLang,
   targetLang
@@ -9,9 +9,9 @@ export const metadataFileGenerator = ({
       {
         properties: {
           "enaio:objectTypeId": {
-            value: "document"
+            value: "article"
           },
-          Name: { value: Name },
+          name: { value: name },
           tags: { value: tags },
           originalLang: { value: originalLang },
           targetLang: { value: targetLang }
@@ -21,6 +21,25 @@ export const metadataFileGenerator = ({
             cid: "cid_63apple"
           }
         ]
+      }
+    ]
+  };
+  const file = new Blob([JSON.stringify(javascript)], {
+    type: "application/json"
+  });
+  return file;
+};
+export const metadataJsonGenerator = ({ autoTranslate, manualTranslate }) => {
+  const javascript = {
+    objects: [
+      {
+        properties: {
+          "enaio:objectTypeId": {
+            value: "article"
+          },
+          autoTranslate: { value: autoTranslate },
+          manualTranslate: { value: manualTranslate }
+        }
       }
     ]
   };
@@ -47,16 +66,13 @@ export const uploadOriginalFile = (text, metadata) => {
   });
 };
 
-export const updateOriginalFile = (docId, text, metadata) => {
-  const formData = new FormData();
-  formData.append("data", metadataFileGenerator(metadata), "metadata");
-  formData.append("cid_63apple", textFileGenerator(text), "contentdata");
-  return fetch("https://api.yuuvis.io/dms/objects", {
+export const updateOriginalFile = (docId, metadata) => {
+  return fetch(`https://api.yuuvis.io/dms/objects/${docId}`, {
     method: "POST",
     headers: {
       "Ocp-Apim-Subscription-Key": "eddb881a638b4b788982b3425ddd92ec"
     },
-    body: formData
+    body: JSON.stringify(metadataJsonGenerator(metadata))
   });
 };
 
@@ -78,3 +94,12 @@ export const search = () => {
     }
   );
 };
+
+export const getDoc = docId =>
+  fetch(`https://api.yuuvis.io/dms/objects/${docId}/contents/file`, {
+    headers: {
+      "Ocp-Apim-Subscription-Key": "eddb881a638b4b788982b3425ddd92ec"
+    }
+  })
+    .then(r => r.text())
+    .then(alert);
