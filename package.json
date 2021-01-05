@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/RexStrider/LearningTranslator#readme",
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "concurrently": "^4.1.1",
     "express": "^4.17.1",
     "request": "^2.88.0"
